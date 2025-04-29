@@ -1,0 +1,42 @@
+# Configuration files with sensitive information
+config.js
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+config.json
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache folders
+.cache/
+.npm/
+.eslintcache
+
+# Build and distribution folders
+/dist
+/build
+/out 

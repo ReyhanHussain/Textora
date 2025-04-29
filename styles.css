@@ -489,7 +489,6 @@ main {
 .note-code-display {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 20px;
 }
 
 .note-code-display p {

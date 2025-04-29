@@ -1,12 +1,13 @@
-// Supabase configuration
-const SUPABASE_URL = 'https://dnaainmosnqewjrssgub.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRuYWFpbm1vc25xZXdqcnNzZ3ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5NDkwODcsImV4cCI6MjA2MTUyNTA4N30.NfPkgO9zHtb78X7YOghN29t3k7mWTlf_dAaGi0kDkbs';
+// Use configuration from config.js for sensitive information
+const SUPABASE_URL = window.appConfig ? window.appConfig.supabase.url : '';
+const SUPABASE_KEY = window.appConfig ? window.appConfig.supabase.key : '';
 let supabaseClient;
 
 // Constants
 const ALLOWED_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Excluding similar looking characters: 0, 1, I, O
 const CODE_LENGTH = 4;
-const RATE_LIMIT_SECONDS = 10;
+const RATE_LIMIT_SECONDS = window.appConfig ? window.appConfig.app.rateLimit : 10;
+const BASE_URL = window.appConfig ? window.appConfig.app.baseUrl : 'https://r-h.netlify.app';
 
 // Initialize page-specific functionality
 document.addEventListener('DOMContentLoaded', () => {
@@ -403,7 +404,7 @@ async function initCreatePage() {
             
             if (noteCode) {
                 document.getElementById('generated-code').textContent = noteCode;
-                document.getElementById('note-link').value = `${window.location.origin}/view.html?code=${noteCode}`;
+                document.getElementById('note-link').value = `${BASE_URL}/view.html?code=${noteCode}`;
                 document.getElementById('expiry-time-display').textContent = `${expiryMinutes} minute${expiryMinutes !== 1 ? 's' : ''}`;
                 
                 document.getElementById('note-form').classList.add('hidden');
@@ -537,7 +538,7 @@ async function loadNote(code) {
         // Set the share link
         const shareLink = document.getElementById('note-share-link');
         if (shareLink) {
-            shareLink.value = `${window.location.origin}/view.html?code=${note.code}`;
+            shareLink.value = `${BASE_URL}/view.html?code=${note.code}`;
         }
         
         // Setup copy button for share link
