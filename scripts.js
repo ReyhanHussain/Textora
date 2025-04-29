@@ -1,6 +1,6 @@
 // Supabase configuration
-const SUPABASE_URL = 'https://your-supabase-url.supabase.co'; // Replace with your Supabase URL
-const SUPABASE_KEY = 'your-supabase-anon-key'; // Replace with your Supabase anon key
+const SUPABASE_URL = 'https://dnaainmosnqewjrssgub.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRuYWFpbm1vc25xZXdqcnNzZ3ViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU5NDkwODcsImV4cCI6MjA2MTUyNTA4N30.NfPkgO9zHtb78X7YOghN29t3k7mWTlf_dAaGi0kDkbs';
 let supabaseClient;
 
 // Constants
@@ -14,22 +14,22 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         if (window.supabase) {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            console.log('Supabase client initialized');
         } else {
-            console.warn('Supabase not available. Some features will be limited.');
+            showNotification('Supabase library not loaded', 'error');
         }
     } catch (error) {
         console.error('Failed to initialize Supabase:', error);
     }
     
-    // Mobile navigation can be set up regardless of Supabase
+    // Mobile navigation setup
     setupMobileNavigation();
     
-    // These functions might depend on page elements
+    // Form-related functionality
     setupCharacterCounter();
     setupCopyButtons();
     setupTryAgainButton();
     
+    // Initialize page-specific code
     if (window.location.pathname.includes('create.html')) {
         initCreatePage();
     } else if (window.location.pathname.includes('view.html')) {
@@ -320,12 +320,6 @@ function setupMobileNavigation() {
                 document.body.style.overflow = '';
             });
         });
-    } else {
-        console.error('Mobile navigation elements not found:', {
-            hamburger: !!hamburger,
-            navLinks: !!navLinks,
-            overlay: !!overlay
-        });
     }
 }
 
@@ -431,8 +425,7 @@ async function createNoteWithUniqueCode(content, expiryMinutes) {
     // Check if Supabase is initialized
     if (!supabaseClient) {
         console.error('Supabase client not initialized');
-        // For testing/development, return a mock code
-        return 'TEST';
+        throw new Error('Database connection not available');
     }
     
     // Try up to 5 times to generate a unique code
@@ -466,9 +459,11 @@ async function createNoteWithUniqueCode(content, expiryMinutes) {
                 }
             }
         } catch (error) {
-            console.error('Supabase error:', error);
-            // For testing/development, return a mock code on error
-            if (attempt === 4) return 'TEST';
+            console.error(`Supabase error on attempt ${attempt + 1}/5:`, error.message || error);
+            // Add exponential backoff before retrying
+            if (attempt < 4) {
+                await new Promise(r => setTimeout(r, 500 * Math.pow(2, attempt)));
+            }
         }
     }
     
@@ -506,14 +501,7 @@ async function loadNote(code) {
         // Check if Supabase is initialized
         if (!supabaseClient) {
             console.error('Supabase client not initialized');
-            // For testing/development, show mock note
-            document.getElementById('display-code').textContent = code;
-            document.getElementById('note-text').textContent = 'This is a test note because Supabase is not configured.';
-            document.getElementById('note-display').classList.remove('hidden');
-            
-            const countdownElement = document.getElementById('countdown-timer');
-            countdownElement.textContent = '00:30:00';
-            
+            showNoteError('Database connection not available. Please try again later.');
             return;
         }
         
@@ -546,6 +534,27 @@ async function loadNote(code) {
         document.getElementById('note-text').textContent = note.content;
         document.getElementById('note-display').classList.remove('hidden');
         
+        // Set the share link
+        const shareLink = document.getElementById('note-share-link');
+        if (shareLink) {
+            shareLink.value = `${window.location.origin}/view.html?code=${note.code}`;
+        }
+        
+        // Setup copy button for share link
+        const copyShareBtn = document.getElementById('copy-share-link-btn');
+        if (copyShareBtn) {
+            copyShareBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(shareLink.value)
+                    .then(() => {
+                        showNotification('Link copied to clipboard!', 'success', 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        showNotification('Failed to copy link', 'error');
+                    });
+            });
+        }
+        
         const countdownElement = document.getElementById('countdown-timer');
         const countdownInterval = setInterval(() => {
             countdownElement.textContent = formatTimeRemaining(expiryTime);
@@ -560,7 +569,7 @@ async function loadNote(code) {
         countdownElement.textContent = formatTimeRemaining(expiryTime);
         
     } catch (error) {
-        console.error('Error loading note:', error);
+        console.error('Error loading note:', error.message || error);
         showNoteError('An error occurred while loading the note.');
     }
 }

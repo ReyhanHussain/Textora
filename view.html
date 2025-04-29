@@ -45,12 +45,25 @@
             
             <div id="note-display" class="note-display hidden">
                 <div class="note-header">
-                    <span class="note-code-display">Code: <span id="display-code" class="code"></span></span>
-                    <span class="expiry-timer">Expires in: <span id="countdown-timer"></span></span>
+                    <div class="note-code-display">
+                        <strong>Code:</strong>
+                        <span id="display-code" class="code"></span>
+                    </div>
+                    <div class="expiry-timer">
+                        <strong>Expires in:</strong>
+                        <span id="countdown-timer"></span>
+                    </div>
                 </div>
                 <div class="note-content">
                     <p id="note-text"></p>
                 </div>
+                
+                <p>Share this note with others:</p>
+                <div class="note-link">
+                    <input type="text" id="note-share-link" readonly>
+                    <button id="copy-share-link-btn" class="btn btn-secondary">Copy Link</button>
+                </div>
+                
                 <a href="create.html" class="btn btn-outline">Create Your Own Note</a>
             </div>
             

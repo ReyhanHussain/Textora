@@ -59,20 +59,28 @@
             <div id="note-result" class="note-result hidden">
                 <div class="success-icon">✓</div>
                 <h3>Note Created Successfully!</h3>
+                
                 <div class="note-code-display">
-                    <p>Your note code is:</p>
                     <div class="code-wrapper">
                         <span id="generated-code" class="code"></span>
                         <button id="copy-code-btn" class="btn btn-secondary">Copy Code</button>
                     </div>
                 </div>
+                
                 <p>Share this link to view the note:</p>
                 <div class="note-link">
                     <input type="text" id="note-link" readonly>
                     <button id="copy-link-btn" class="btn btn-secondary">Copy Link</button>
                 </div>
-                <p class="expiry-message">Note will expire in <span id="expiry-time-display"></span></p>
-                <a href="create.html" class="btn btn-outline">Create Another Note</a>
+                
+                <div class="note-actions">
+                    <div class="expiry-info">
+                        <p>Note will expire in <span id="expiry-time-display"></span></p>
+                    </div>
+                    <div class="create-new">
+                        <a href="create.html" class="btn btn-outline">Create Another Note</a>
+                    </div>
+                </div>
             </div>
             
             <div class="decorative-gradient"></div>
@@ -89,7 +97,7 @@
         </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html> 

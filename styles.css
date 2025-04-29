@@ -435,13 +435,66 @@ main {
     justify-content: center;
 }
 
-/* Code wrapper */
+/* Note sharing and actions sections */
+.note-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.expiry-info p {
+    color: var(--warning-color);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.create-new {
+    margin-left: auto;
+}
+
+/* Code and code wrapper styling */
 .code-wrapper {
     display: flex;
-    align-items: center;
+    gap: 20px;
+    margin: 15px 0;
+    width: 100%;
     justify-content: center;
-    gap: 1rem;
-    margin: 1rem 0 2rem;
+}
+
+.code-wrapper p {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    min-width: 60px;
+    color: var(--secondary-color);
+}
+
+.code {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    letter-spacing: 5px;
+    background-color: rgba(220, 174, 80, 0.1);
+    padding: 8px 20px;
+    border-radius: var(--border-radius);
+    min-width: 120px;
+    text-align: center;
+    border: 1px solid rgba(220, 174, 80, 0.2);
+}
+
+.note-code-display {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.note-code-display p {
+    font-weight: 500;
+    margin-bottom: 8px;
 }
 
 /* Buttons */
@@ -537,6 +590,36 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.note-header strong {
+    color: var(--dark-color);
+    font-weight: 700;
+    margin-right: 0;
+    font-size: 1.1rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.note-header span {
+    color: var(--dark-color);
+    font-weight: 700;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.note-header span#display-code {
+    font-size: 1.3rem;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 2px;
+    padding: 0 4px;
+    background-color: rgba(85, 84, 84, 0.26);
+    border-radius: 3px;
+    margin-left: 6px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .note-code {
@@ -566,11 +649,12 @@ main {
     background-color: var(--card-bg);
     padding: 2.5rem;
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    box-shadow: var(--leow);
     max-width: 600px;
     margin: 0 auto;
     position: relative;
     border: 1px solid rgba(220, 174, 80, 0.1);
+    z-index: 5;
 }
 
 .form-group {
@@ -633,6 +717,7 @@ main {
     text-align: center;
     position: relative;
     border: 1px solid rgba(220, 174, 80, 0.1);
+    z-index: 5;
 }
 
 .note-result::before,
@@ -656,22 +741,12 @@ main {
     background: var(--danger-color);
 }
 
-.code {
-    font-family: 'Roboto Mono', monospace;
-    font-weight: bold;
-    font-size: 1.8rem;
-    color: var(--primary-color);
-    letter-spacing: 3px;
-}
-
-.note-code-display {
-    margin: 2rem 0;
-}
-
+/* Note link and share section */
 .note-link {
     display: flex;
     gap: 0.5rem;
     margin: 1.5rem 0 2.5rem;
+    width: 100%;
 }
 
 .note-link input {
@@ -680,17 +755,34 @@ main {
     border: 1px solid rgba(220, 174, 80, 0.2);
     border-radius: var(--border-radius);
     font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
     background-color: rgba(255, 255, 255, 0.05);
     color: var(--secondary-color);
+    min-width: 0; /* Prevents flex item from overflowing */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .expiry-message {
     color: var(--secondary-color);
-    margin-bottom: 2rem;
-    padding: 0.8rem;
+    margin: 0;
+    padding: 0.8rem 1rem;
     background-color: rgba(220, 174, 80, 0.1);
     border-radius: var(--border-radius);
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+}
+
+.horizontal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .code-input {
@@ -858,7 +950,20 @@ footer::before {
     }
     
     .code-wrapper {
-        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .code-wrapper p {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .code {
+        font-size: 1.5rem;
+        padding: 8px;
+        margin: 0;
+        flex: 1;
     }
     
     .footer-content {
@@ -958,6 +1063,62 @@ footer::before {
         transform: rotate(-45deg) translate(5px, -5px);
         background: var(--primary-color);
     }
+    
+    .note-header {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .note-code-display, 
+    .expiry-timer {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .note-header strong {
+        font-size: 1.2rem;
+        min-width: 80px;
+    }
+    
+    .note-header span#display-code,
+    #countdown-timer {
+        font-size: 1.2rem;
+        flex: 1;
+    }
+    
+    .note-actions {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .create-new {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .create-new .btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .note-link {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .note-link input {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 0.7rem;
+    }
+    
+    .note-link button {
+        width: 100%;
+    }
 }
 
 /* Modal component */
@@ -1032,4 +1193,29 @@ footer::before {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
+}
+
+.form-group select option {
+    background-color: var(--card-bg);
+    color: var(--secondary-color);
+}
+
+.expiry-timer {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+#countdown-timer {
+    font-family: 'Roboto Mono', monospace;
+    color: var(--dark-color);
+    font-weight: 700;
+    font-size: 1.3rem;
+    background-color: rgba(85, 84, 84, 0.26);
+    padding: 0 4px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    margin-left: 6px;
+    display: inline-block;
+    vertical-align: middle;
 }
