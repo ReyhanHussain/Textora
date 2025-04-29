@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TempText - Temporary Text Notes</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header id="header">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1>TempText</h1>
+                </div>
+                <button class="hamburger" id="hamburger-menu" type="button" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="create.html">Create Note</a></li>
+                    <li><a href="view.html">View Note</a></li>
+                </ul>
+                <div class="nav-overlay" id="nav-overlay"></div>
+            </nav>
+        </header>
+
+        <main class="hero-fullscreen">
+            <div class="hero-content">
+                <span class="badge">Simple & Secure</span>
+                <h1>Share Text Notes That Self-Destruct</h1>
+                <p>Create temporary text notes with a unique 4-character code. Notes expire automatically after your chosen time, ensuring your information doesn't stay online forever.</p>
+                
+                <div class="action-buttons">
+                    <a href="create.html" class="btn btn-primary">Create a Note</a>
+                    <a href="view.html" class="btn btn-secondary">View a Note</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="note-card">
+                    <div class="note-header">
+                        <span class="note-code">7K3Y</span>
+                        <span class="note-timer">Expires in: 30 min</span>
+                    </div>
+                    <div class="note-content">
+                        <p>This is a sample temporary note. Your messages will be automatically deleted after they expire!</p>
+                    </div>
+                </div>
+                <div class="decorative-dots"></div>
+            </div>
+            <div class="decorative-gradient"></div>
+        </main>
+
+        <section class="section features">
+            <div class="section-intro">
+                <h2 class="section-title">How It Works</h2>
+                <p class="subtitle">Simple, secure, and ephemeral messaging</p>
+            </div>
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-icon">📝</div>
+                    <h3 class="card-title">Create</h3>
+                    <p>Write your message and set how long it should last. Maximum 500 characters for quick, focused notes.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔑</div>
+                    <h3 class="card-title">Share</h3>
+                    <p>Get a unique 4-character code to share with others. Simple to remember and communicate.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⏱️</div>
+                    <h3 class="card-title">Expire</h3>
+                    <p>Notes automatically delete when time is up. No traces left behind, ensuring your privacy.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="cta-content">
+                <h2>Ready to send a note?</h2>
+                <p>Your secure, temporary messaging is just one click away.</p>
+                <a href="create.html" class="btn btn-primary">Get Started Now</a>
+            </div>
+        </section>
+
+        <footer id="footer">
+            <div class="footer-content">
+                <p>&copy; 2023 TempText - All rights reserved</p>
+                <div class="footer-links">
+                    <a href="#" onclick="showPrivacyModal(); return false;">Privacy Policy</a>
+                    <a href="#" onclick="showTermsModal(); return false;">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>

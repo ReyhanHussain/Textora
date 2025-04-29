@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Note - TempText</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header id="header">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1>TempText</h1>
+                </div>
+                <button class="hamburger" id="hamburger-menu" type="button" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="create.html">Create Note</a></li>
+                    <li><a href="view.html" class="active">View Note</a></li>
+                </ul>
+                <div class="nav-overlay" id="nav-overlay"></div>
+            </nav>
+        </header>
+
+        <main class="section view-note">
+            <div class="section-intro">
+                <span class="badge">Secure Access</span>
+                <h2 class="section-title">View a Temporary Note</h2>
+                <p class="subtitle">Enter the 4-character code to retrieve your message</p>
+            </div>
+            
+            <div id="code-input-section" class="note-form">
+                <div class="form-group">
+                    <label for="note-code">Enter 4-Character Note Code</label>
+                    <input type="text" id="note-code" maxlength="4" placeholder="e.g. 7K3Y" class="code-input">
+                </div>
+                <button id="view-note-btn" class="btn btn-primary">View Note</button>
+            </div>
+            
+            <div id="note-display" class="note-display hidden">
+                <div class="note-header">
+                    <span class="note-code-display">Code: <span id="display-code" class="code"></span></span>
+                    <span class="expiry-timer">Expires in: <span id="countdown-timer"></span></span>
+                </div>
+                <div class="note-content">
+                    <p id="note-text"></p>
+                </div>
+                <a href="create.html" class="btn btn-outline">Create Your Own Note</a>
+            </div>
+            
+            <div id="note-error" class="note-error hidden">
+                <div class="error-icon">!</div>
+                <h3>Note Not Found</h3>
+                <p id="error-message">The note you're looking for doesn't exist or has expired.</p>
+                <div class="error-actions">
+                    <a href="create.html" class="btn btn-primary">Create a New Note</a>
+                    <button id="try-again-btn" class="btn btn-outline">Try Another Code</button>
+                </div>
+            </div>
+            
+            <div class="decorative-gradient"></div>
+        </main>
+
+        <footer id="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 TempText - All rights reserved</p>
+                <div class="footer-links">
+                    <a href="#" onclick="showPrivacyModal(); return false;">Privacy Policy</a>
+                    <a href="#" onclick="showTermsModal(); return false;">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts.js"></script>
+</body>
+</html> 

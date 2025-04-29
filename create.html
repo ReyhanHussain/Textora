@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Note - TempText</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header id="header">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1>TempText</h1>
+                </div>
+                <button class="hamburger" id="hamburger-menu" type="button" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="create.html" class="active">Create Note</a></li>
+                    <li><a href="view.html">View Note</a></li>
+                </ul>
+                <div class="nav-overlay" id="nav-overlay"></div>
+            </nav>
+        </header>
+
+        <main class="section create-note">
+            <div class="section-intro">
+                <span class="badge">Secure & Temporary</span>
+                <h2 class="section-title">Create a Self-Destructing Note</h2>
+                <p class="subtitle">Your note will be accessible only until it expires</p>
+            </div>
+            
+            <div class="note-form" id="note-form">
+                <div class="form-group">
+                    <label for="note-content">Your Note (500 characters max)</label>
+                    <textarea id="note-content" maxlength="500" placeholder="Type your message here..."></textarea>
+                    <div class="char-counter"><span id="char-count">0</span>/500</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expiry-time">Note Expiry Time</label>
+                    <select id="expiry-time">
+                        <option value="10">10 minutes</option>
+                        <option value="30" selected>30 minutes</option>
+                        <option value="60">1 hour</option>
+                        <option value="120">2 hours</option>
+                        <option value="180">3 hours</option>
+                    </select>
+                </div>
+                
+                <button id="create-note-btn" class="btn btn-primary">Create Note</button>
+            </div>
+            
+            <div id="note-result" class="note-result hidden">
+                <div class="success-icon">✓</div>
+                <h3>Note Created Successfully!</h3>
+                <div class="note-code-display">
+                    <p>Your note code is:</p>
+                    <div class="code-wrapper">
+                        <span id="generated-code" class="code"></span>
+                        <button id="copy-code-btn" class="btn btn-secondary">Copy Code</button>
+                    </div>
+                </div>
+                <p>Share this link to view the note:</p>
+                <div class="note-link">
+                    <input type="text" id="note-link" readonly>
+                    <button id="copy-link-btn" class="btn btn-secondary">Copy Link</button>
+                </div>
+                <p class="expiry-message">Note will expire in <span id="expiry-time-display"></span></p>
+                <a href="create.html" class="btn btn-outline">Create Another Note</a>
+            </div>
+            
+            <div class="decorative-gradient"></div>
+        </main>
+
+        <footer id="footer">
+            <div class="footer-content">
+                <p>&copy; 2023 TempText - All rights reserved</p>
+                <div class="footer-links">
+                    <a href="#" onclick="showPrivacyModal(); return false;">Privacy Policy</a>
+                    <a href="#" onclick="showTermsModal(); return false;">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts.js"></script>
+</body>
+</html> 
