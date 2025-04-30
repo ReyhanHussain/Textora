@@ -12,7 +12,9 @@
         <header id="header">
             <nav class="navbar">
                 <div class="logo">
-                    <h1>TempText</h1>
+                    <a href="index.html" class="logo-link">
+                        <h1>TempText</h1>
+                    </a>
                 </div>
                 <button class="hamburger" id="hamburger-menu" type="button" aria-label="Toggle menu">
                     <span></span>
@@ -55,7 +57,18 @@
                     </div>
                 </div>
                 <div class="note-content">
-                    <p id="note-text"></p>
+                    <div class="note-toolbar">
+                        <div class="note-actions">
+                            <button id="copy-all-btn" class="btn btn-tool" title="Copy All"><i class="tool-icon">📋</i> Copy All</button>
+                            <button id="download-txt-btn" class="btn btn-tool" title="Download as TXT"><i class="tool-icon">📄</i> Download</button>
+                            <button id="toggle-line-numbers-btn" class="btn btn-tool" title="Toggle Line Numbers"><i class="tool-icon">🔢</i> Line Numbers</button>
+                            <button id="fullscreen-btn" class="btn btn-tool" title="Toggle Fullscreen"><i class="tool-icon">🔍</i> Fullscreen</button>
+                        </div>
+                    </div>
+                    <div class="note-viewer" id="note-viewer">
+                        <div class="line-numbers hidden" id="line-numbers"></div>
+                        <pre id="note-text" class="note-text" onscroll="document.getElementById('line-numbers').scrollTop = this.scrollTop"></pre>
+                    </div>
                 </div>
                 
                 <p>Share this note with others:</p>
