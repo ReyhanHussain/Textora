@@ -215,6 +215,12 @@ main {
     margin: 0 auto 3rem;
 }
 
+@media (max-width: 768px) {
+    .section-intro {
+        margin: 0 auto 2rem;
+    }
+}
+
 .section-title {
     font-size: 2.2rem;
     margin-bottom: 1rem;
@@ -744,7 +750,7 @@ main {
 .note-link {
     display: flex;
     gap: 0.5rem;
-    margin: 1.5rem 0 2.5rem;
+    margin: 1.5rem 0 1rem;
     width: 100%;
 }
 
@@ -925,12 +931,167 @@ footer::before {
     opacity: 1;
 }
 
+/* Share options styling */
+/* QR Code Modal */
+.qr-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-modal.show {
+    display: flex;
+}
+
+.qr-modal-content {
+    background-color: var(--card-bg);
+    margin: auto;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 90%;
+    width: 340px;
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(220, 174, 80, 0.2);
+}
+
+.qr-modal-content h3 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.qr-close, .qr-close-view {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.qr-close:hover, .qr-close-view:hover {
+    color: var(--primary-color);
+}
+
+.qr-display {
+    background-color: white;
+    padding: 1.2rem;
+    border-radius: var(--border-radius);
+    margin: 0 auto 1.5rem;
+    display: inline-block;
+    position: relative;
+    border: 1px solid rgba(220, 174, 80, 0.3);
+    box-shadow: var(--shadow-sm);
+}
+
+.qr-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(220, 174, 80, 0.1) 0%, transparent 100%);
+    border-radius: var(--border-radius);
+    pointer-events: none;
+}
+
+.qr-display img {
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+.qr-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.action-icon {
+    margin-right: 0.3rem;
+    font-style: normal;
+}
+
+.share-options {
+    margin: 1rem 0 2rem;
+    width: 100%;
+}
+
+.share-options p {
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+}
+
+.share-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+}
+
+.btn-share {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    border-radius: var(--border-radius);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--secondary-color);
+    transition: all 0.3s;
+    border: 1px solid rgba(220, 174, 80, 0.1);
+}
+
+.btn-share:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(220, 174, 80, 0.3);
+}
+
+.btn-share .share-icon {
+    margin-right: 0.5rem;
+    font-style: normal;
+}
+
+.btn-share.whatsapp:hover { border-color: #25D366; }
+.btn-share.telegram:hover { border-color: #0088cc; }
+.btn-share.twitter:hover { border-color: #1DA1F2; }
+.btn-share.facebook:hover { border-color: #4267B2; }
+.btn-share.email:hover { border-color: #D44638; }
+.btn-share.native:hover { border-color: var(--primary-color); background-color: var(--primary-light); }
+.btn-share.qrcode:hover { border-color: var(--primary-color); background-color: var(--primary-light); }
+
 /* Responsive styles */
 @media (max-width: 768px) {
-    .section {
-        padding: 3rem 0;
+    .qr-modal-content {
+        width: 90%;
+        padding: 1.5rem;
     }
     
+    .qr-display {
+        padding: 0.8rem;
+    }
+    
+    .qr-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .qr-actions .btn {
+        width: 100%;
+    }
     .section-title {
         font-size: 1.8rem;
     }

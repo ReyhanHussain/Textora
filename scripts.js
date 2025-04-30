@@ -33,6 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCopyButtons();
     setupTryAgainButton();
     
+    // Setup QR code buttons - do this after DOM is fully loaded
+    setTimeout(() => {
+        // Only setup buttons if they exist on the current page
+        if (document.getElementById('share-qr')) {
+            setupQRCodeButton('share-qr', 'qrcode-modal', 'qrcode', 'download-qr-btn', 'qr-close', '#note-link');
+        }
+        if (document.getElementById('share-qr-view')) {
+            setupQRCodeButton('share-qr-view', 'qrcode-modal-view', 'qrcode-view', 'download-qr-view-btn', 'qr-close-view', '#note-share-link');
+        }
+    }, 500);
+    
     // Initialize page-specific code
     if (window.location.pathname.includes('create.html')) {
         initCreatePage();
@@ -382,6 +393,10 @@ function setupCopyButtons() {
     
     setupCopyButton('copy-code-btn', '#generated-code');
     setupCopyButton('copy-link-btn', '#note-link');
+    setupCopyButton('copy-share-link-btn', '#note-share-link');
+    
+    // Setup share buttons
+    setupShareButtons();
 }
 
 // Try again button setup
@@ -393,6 +408,216 @@ function setupTryAgainButton() {
             document.getElementById('code-input-section').classList.remove('hidden');
         });
     }
+}
+
+// QR Code functionality
+function setupQRCodeButton(buttonId, modalId, qrElementId, downloadBtnId, closeId, linkSelector) {
+    const qrButton = document.getElementById(buttonId);
+    const modal = document.getElementById(modalId);
+    const closeBtn = document.querySelector(`.${closeId}`);
+    const downloadBtn = document.getElementById(downloadBtnId);
+    
+    // Get share button ID based on whether it's the main or view page
+    const shareBtn = document.getElementById(qrElementId === 'qrcode' ? 'share-qr-btn' : 'share-qr-view-btn');
+    
+    if (!qrButton || !modal) return;
+    
+    // Open modal when QR button is clicked
+    qrButton.addEventListener('click', () => {
+        const linkElement = document.querySelector(linkSelector);
+        if (!linkElement) return;
+        
+        const url = linkElement.value;
+        
+        // Clear previous QR code
+        const qrElement = document.getElementById(qrElementId);
+        if (qrElement) {
+            qrElement.innerHTML = '';
+            
+            // Generate high-quality QR code
+            try {
+                new QRCode(qrElement, {
+                    text: url,
+                    width: 200,  // Larger size for better clarity
+                    height: 200,
+                    colorDark: '#111111',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } catch (error) {
+                console.error('Error generating QR code:', error);
+                showNotification('Error generating QR code', 'error');
+            }
+        }
+        
+        // Show modal
+        modal.classList.add('show');
+        modal.classList.remove('hidden');
+    });
+    
+    // Close modal when X is clicked
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+            modal.classList.add('hidden');
+        });
+    }
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            modal.classList.add('hidden');
+        }
+    });
+    
+    // Download QR code
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            downloadQRCode(qrElementId);
+        });
+    }
+    
+    // Share QR code image
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            shareQRCode(qrElementId, linkSelector);
+        });
+    }
+}
+
+// Share QR code via Web Share API or fallback
+function shareQRCode(qrElementId, linkSelector) {
+    const qrElement = document.getElementById(qrElementId);
+    const linkElement = document.querySelector(linkSelector);
+    
+    if (!qrElement || !linkElement) return;
+    
+    const url = linkElement.value;
+    const title = 'TempText - QR Code';
+    const text = 'Scan this QR code to view the temporary note:';
+    
+    // Try to share the QR code image if possible
+    if (navigator.share) {
+        // First try to share the image if we can get it
+        const img = qrElement.querySelector('img');
+        if (img) {
+            try {
+                // Create a canvas with the QR code
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width * 2;
+                canvas.height = img.height * 2;
+                
+                // Draw white background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw QR code
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // Convert to blob for sharing
+                canvas.toBlob(async (blob) => {
+                    try {
+                        // Try to share the image
+                        if (blob && navigator.canShare && navigator.canShare({ files: [new File([blob], 'qrcode.png', { type: 'image/png' })] })) {
+                            await navigator.share({
+                                title: title,
+                                text: text,
+                                files: [new File([blob], 'qrcode.png', { type: 'image/png' })]
+                            });
+                            showNotification('QR code shared!', 'success');
+                        } else {
+                            // Fall back to sharing just the URL
+                            await navigator.share({
+                                title: title,
+                                text: text,
+                                url: url
+                            });
+                            showNotification('Link shared!', 'success');
+                        }
+                    } catch (err) {
+                        console.error('Error sharing:', err);
+                        if (err.name !== 'AbortError') {
+                            showNotification('Failed to share', 'error');
+                        }
+                    }
+                }, 'image/png');
+            } catch (err) {
+                // If canvas operations fail, fall back to sharing the URL
+                shareUrl(url, title, text);
+            }
+        } else {
+            // No image found, share the URL
+            shareUrl(url, title, text);
+        }
+    } else {
+        // Web Share API not supported, copy to clipboard instead
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                showNotification('Link copied to clipboard!', 'success');
+            })
+            .catch(err => {
+                console.error('Failed to copy:', err);
+                showNotification('Failed to copy link', 'error');
+            });
+    }
+}
+
+// Helper function to share URL
+async function shareUrl(url, title, text) {
+    try {
+        await navigator.share({
+            title: title,
+            text: text,
+            url: url
+        });
+        showNotification('Link shared!', 'success');
+    } catch (err) {
+        console.error('Error sharing URL:', err);
+        if (err.name !== 'AbortError') {
+            showNotification('Failed to share', 'error');
+        }
+    }
+}
+
+function downloadQRCode(qrElementId) {
+    const qrElement = document.getElementById(qrElementId);
+    if (!qrElement) return;
+    
+    const img = qrElement.querySelector('img');
+    if (!img) return;
+    
+    // Create canvas for better quality
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = img.width * 4;  // Increased size for better quality
+    canvas.height = img.height * 4;
+    
+    // Draw white background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw QR code with margin
+    const margin = canvas.width * 0.1;
+    const size = canvas.width - (margin * 2);
+    ctx.drawImage(img, margin, margin, size, size);
+    
+    // Add a small branding text at the bottom
+    ctx.font = '14px Arial';
+    ctx.fillStyle = '#111111';
+    ctx.textAlign = 'center';
+    ctx.fillText('TempText', canvas.width / 2, canvas.height - 10);
+    
+    // Download
+    const link = document.createElement('a');
+    link.download = 'temptext-qrcode.png';
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification('QR code downloaded!', 'success', 2000);
 }
 
 // Create page functionality
@@ -427,11 +652,14 @@ async function initCreatePage() {
             
             if (noteCode) {
                 document.getElementById('generated-code').textContent = noteCode;
-                document.getElementById('note-link').value = `${BASE_URL}/view.html?code=${noteCode}`;
+                const noteLink = `${BASE_URL}/view.html?code=${noteCode}`;
+                document.getElementById('note-link').value = noteLink;
                 document.getElementById('expiry-time-display').textContent = `${expiryMinutes} minute${expiryMinutes !== 1 ? 's' : ''}`;
                 
                 document.getElementById('note-form').classList.add('hidden');
                 document.getElementById('note-result').classList.remove('hidden');
+                
+
                 
                 showNotification('Note created successfully!', 'success');
             }
@@ -560,9 +788,12 @@ async function loadNote(code) {
         
         // Set the share link
         const shareLink = document.getElementById('note-share-link');
+        const noteLinkUrl = `${BASE_URL}/view.html?code=${note.code}`;
         if (shareLink) {
-            shareLink.value = `${BASE_URL}/view.html?code=${note.code}`;
+            shareLink.value = noteLinkUrl;
         }
+        
+
         
         // Setup copy button for share link
         const copyShareBtn = document.getElementById('copy-share-link-btn');
@@ -605,4 +836,75 @@ function showNoteError(message) {
     }
     
     document.getElementById('note-error').classList.remove('hidden');
+}
+
+// Share functionality
+function setupShareButtons() {
+    const shareButtons = [
+        { id: 'share-whatsapp', viewId: 'share-whatsapp-view', urlGen: (url, title) => `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}` },
+        { id: 'share-telegram', viewId: 'share-telegram-view', urlGen: (url, title) => `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}` },
+        { id: 'share-twitter', viewId: 'share-twitter-view', urlGen: (url, title) => `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}` },
+        { id: 'share-facebook', viewId: 'share-facebook-view', urlGen: (url, title) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
+        { id: 'share-email', viewId: 'share-email-view', urlGen: (url, title) => `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Check out this temporary note: ' + url)}` }
+    ];
+    
+    // Setup all share buttons
+    shareButtons.forEach(btn => {
+        setupSingleShareButton(btn.id, btn.urlGen);
+        setupSingleShareButton(btn.viewId, btn.urlGen);
+    });
+    
+    // Native share API (for mobile devices)
+    setupNativeShare('share-native');
+    setupNativeShare('share-native-view');
+}
+
+function setupSingleShareButton(buttonId, urlGenerator) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+    
+    button.addEventListener('click', () => {
+        const noteLink = document.getElementById('note-link') || document.getElementById('note-share-link');
+        if (!noteLink) return;
+        
+        const url = noteLink.value;
+        const title = 'TempText - Temporary Note';
+        const shareUrl = urlGenerator(url, title);
+        
+        // Open in new window
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+        showNotification('Opening share window...', 'success', 2000);
+    });
+}
+
+function setupNativeShare(buttonId) {
+    const nativeShareBtn = document.getElementById(buttonId);
+    if (!nativeShareBtn) return;
+    
+    if (navigator.share) {
+        nativeShareBtn.addEventListener('click', async () => {
+            const noteLink = document.getElementById('note-link') || document.getElementById('note-share-link');
+            if (!noteLink) return;
+            
+            const url = noteLink.value;
+            const title = 'TempText - Temporary Note';
+            
+            try {
+                await navigator.share({
+                    title: title,
+                    text: 'Check out this temporary note:',
+                    url: url
+                });
+                showNotification('Shared successfully!', 'success');
+            } catch (err) {
+                console.error('Error sharing:', err);
+                if (err.name !== 'AbortError') {
+                    showNotification('Failed to share', 'error');
+                }
+            }
+        });
+    } else {
+        // Hide native share button if not supported
+        nativeShareBtn.style.display = 'none';
+    }
 }

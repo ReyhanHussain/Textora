@@ -73,6 +73,32 @@
                     <button id="copy-link-btn" class="btn btn-secondary">Copy Link</button>
                 </div>
                 
+                
+                
+                <div class="share-options">
+                    <p>Share via:</p>
+                    <div class="share-buttons">
+                        <button id="share-whatsapp" class="btn btn-share whatsapp" title="Share on WhatsApp"><i class="share-icon">📱</i> WhatsApp</button>
+                        <button id="share-telegram" class="btn btn-share telegram" title="Share on Telegram"><i class="share-icon">✈️</i> Telegram</button>
+                        <button id="share-twitter" class="btn btn-share twitter" title="Share on Twitter"><i class="share-icon">🐦</i> Twitter</button>
+                        <button id="share-facebook" class="btn btn-share facebook" title="Share on Facebook"><i class="share-icon">👥</i> Facebook</button>
+                        <button id="share-email" class="btn btn-share email" title="Share via Email"><i class="share-icon">📧</i> Email</button>
+                        <button id="share-qr" class="btn btn-share qrcode" title="Share via QR Code"><i class="share-icon">📲</i> QR Code</button>
+                        <button id="share-native" class="btn btn-share native" title="Share using device options"><i class="share-icon">🔗</i> More Options</button>
+                    </div>
+                    <div id="qrcode-modal" class="qr-modal hidden">
+                        <div class="qr-modal-content">
+                            <span class="qr-close">&times;</span>
+                            <h3>Scan QR Code</h3>
+                            <div id="qrcode" class="qr-display"></div>
+                            <div class="qr-actions">
+                                <button id="download-qr-btn" class="btn btn-secondary"><i class="action-icon">⬇️</i> Download</button>
+                                <button id="share-qr-btn" class="btn btn-secondary"><i class="action-icon">📤</i> Share</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="note-actions">
                     <div class="expiry-info">
                         <p>Note will expire in <span id="expiry-time-display"></span></p>
@@ -98,6 +124,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="config.js"></script>
     <script src="scripts.js"></script>
 </body>
