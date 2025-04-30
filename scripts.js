@@ -1,6 +1,6 @@
-// Use configuration from config.js for sensitive information
-const SUPABASE_URL = window.appConfig ? window.appConfig.supabase.url : '';
-const SUPABASE_KEY = window.appConfig ? window.appConfig.supabase.key : '';
+// Get Supabase credentials from environment or config
+const SUPABASE_URL = (window.appConfig && window.appConfig.supabase.url) || process.env.SUPABASE_URL;
+const SUPABASE_KEY = (window.appConfig && window.appConfig.supabase.key) || process.env.SUPABASE_KEY;
 let supabaseClient;
 
 // Constants
@@ -13,13 +13,16 @@ const BASE_URL = window.appConfig ? window.appConfig.app.baseUrl : 'https://r-h.
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Supabase client
     try {
-        if (window.supabase) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('Supabase client initialized');
         } else {
-            showNotification('Supabase library not loaded', 'error');
+            console.error('Supabase library not loaded');
+            showNotification('Database connection error', 'error');
         }
     } catch (error) {
         console.error('Failed to initialize Supabase:', error);
+        showNotification('Database connection error', 'error');
     }
     
     // Mobile navigation setup
@@ -37,6 +40,26 @@ document.addEventListener('DOMContentLoaded', () => {
         initViewPage();
     }
 });
+
+// Test the Supabase connection
+async function testSupabaseConnection() {
+    try {
+        // Try a simple query to test the connection
+        const { data, error } = await supabaseClient
+            .from('notes')
+            .select('id')
+            .limit(1);
+        
+        if (error) {
+            console.error('Supabase connection test failed:', error);
+            showNotification('Database connection issue. Some features may not work.', 'error');
+        } else {
+            console.log('Supabase connection test successful');
+        }
+    } catch (err) {
+        console.error('Error testing Supabase connection:', err);
+    }
+}
 
 // Utility functions
 function sanitizeInput(input) {
