@@ -788,9 +788,6 @@ async function loadNote(code) {
         
         document.getElementById('display-code').textContent = note.code;
         document.getElementById('note-text').textContent = note.content;
-        
-        // Setup line numbers if content has multiple lines
-        updateLineNumbers(note.content);
         document.getElementById('note-display').classList.remove('hidden');
         
         // Set the share link
@@ -893,94 +890,10 @@ function setupNoteViewerFeatures() {
         });
     }
     
-    // Toggle Line Numbers functionality
-    const toggleLineNumbersBtn = document.getElementById('toggle-line-numbers-btn');
-    const lineNumbers = document.getElementById('line-numbers');
-    if (toggleLineNumbersBtn && lineNumbers) {
-        toggleLineNumbersBtn.addEventListener('click', () => {
-            lineNumbers.classList.toggle('hidden');
-            const isVisible = !lineNumbers.classList.contains('hidden');
-            showNotification(`Line numbers ${isVisible ? 'enabled' : 'disabled'}`, 'success', 1500);
-            
-            // Update line numbers if they're now visible
-            if (isVisible) {
-                const noteText = document.getElementById('note-text');
-                if (noteText) {
-                    updateLineNumbers(noteText.textContent);
-                    
-                    // Immediately sync scroll position
-                    lineNumbers.scrollTop = noteText.scrollTop;
-                }
-            }
-        });
-    }
-    
-    // Fullscreen functionality
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-    const noteViewer = document.getElementById('note-viewer');
-    if (fullscreenBtn && noteViewer) {
-        fullscreenBtn.addEventListener('click', () => {
-            noteViewer.classList.toggle('fullscreen');
-            const isFullscreen = noteViewer.classList.contains('fullscreen');
-            
-            // Update button text based on state
-            fullscreenBtn.innerHTML = isFullscreen ? 
-                '<i class="tool-icon">⬇️</i> Exit Fullscreen' : 
-                '<i class="tool-icon">🔍</i> Fullscreen';
-                
-            // Prevent scrolling on body when in fullscreen
-            document.body.style.overflow = isFullscreen ? 'hidden' : '';
-            
-            showNotification(`${isFullscreen ? 'Entered' : 'Exited'} fullscreen mode`, 'success', 1500);
-        });
-        
-        // Allow ESC key to exit fullscreen
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && noteViewer.classList.contains('fullscreen')) {
-                noteViewer.classList.remove('fullscreen');
-                document.body.style.overflow = '';
-                fullscreenBtn.innerHTML = '<i class="tool-icon">🔍</i> Fullscreen';
-            }
-        });
-    }
+
 }
 
-// Helper function to update line numbers
-function updateLineNumbers(content) {
-    const lineNumbersContainer = document.getElementById('line-numbers');
-    const noteText = document.getElementById('note-text');
-    if (!lineNumbersContainer || !noteText) return;
-    
-    // Clear existing line numbers
-    lineNumbersContainer.innerHTML = '';
-    
-    // First, handle the actual line breaks in the content
-    const lines = content.split('\n');
-    
-    // Generate line numbers immediately
-    const visibleLines = Math.max(lines.length, 100); // Ensure plenty of line numbers
-    
-    for (let i = 1; i <= visibleLines; i++) {
-        const lineNumber = document.createElement('div');
-        lineNumber.textContent = i;
-        lineNumbersContainer.appendChild(lineNumber);
-    }
-    
-    // Make sure the scroll event is only added once
-    noteText.removeEventListener('scroll', syncLineNumbersScroll);
-    noteText.addEventListener('scroll', syncLineNumbersScroll);
-    
-    // Immediately sync the scroll position
-    lineNumbersContainer.scrollTop = noteText.scrollTop;
-}
 
-// Function to sync line numbers scroll with text
-function syncLineNumbersScroll() {
-    const lineNumbers = document.getElementById('line-numbers');
-    if (lineNumbers) {
-        lineNumbers.scrollTop = this.scrollTop;
-    }
-}
 
 // Share functionality
 function setupShareButtons() {

@@ -1053,13 +1053,16 @@ footer::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.6rem 1rem;
+    padding: 0.6rem;
     font-size: 0.9rem;
-    border-radius: var(--border-radius);
+    border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.05);
     color: var(--secondary-color);
     transition: all 0.3s;
     border: 1px solid rgba(220, 174, 80, 0.1);
+    width: 45px;
+    height: 45px;
+    margin: 0.25rem;
 }
 
 .btn-share:hover {
@@ -1069,15 +1072,16 @@ footer::before {
 }
 
 .btn-share .share-icon {
-    margin-right: 0.5rem;
-    font-style: normal;
+    width: 20px;
+    height: 20px;
+    display: block;
 }
 
-.btn-share.whatsapp:hover { border-color: #25D366; }
-.btn-share.telegram:hover { border-color: #0088cc; }
-.btn-share.twitter:hover { border-color: #1DA1F2; }
-.btn-share.facebook:hover { border-color: #4267B2; }
-.btn-share.email:hover { border-color: #D44638; }
+.btn-share.whatsapp:hover { border-color: #25D366; background-color: rgba(37, 211, 102, 0.1); }
+.btn-share.telegram:hover { border-color: #0088cc; background-color: rgba(0, 136, 204, 0.1); }
+.btn-share.twitter:hover { border-color: #1DA1F2; background-color: rgba(29, 161, 242, 0.1); }
+.btn-share.facebook:hover { border-color: #4267B2; background-color: rgba(66, 103, 178, 0.1); }
+.btn-share.email:hover { border-color: #D44638; background-color: rgba(212, 70, 56, 0.1); }
 .btn-share.native:hover { border-color: var(--primary-color); background-color: var(--primary-light); }
 .btn-share.qrcode:hover { border-color: var(--primary-color); background-color: var(--primary-light); }
 
@@ -1129,28 +1133,11 @@ footer::before {
     z-index: 10;
 }
 
-.note-viewer.fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    z-index: 9999;
-    border-radius: 0;
-    padding: 2rem;
-    background-color: rgba(0, 0, 0, 0.95);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-.note-viewer.fullscreen .note-text {
-    max-width: 900px;
-    margin: 0 auto;
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #f0f0f0;
+
+
+.hidden {
+    display: none;
 }
 
 .note-text {
@@ -1168,27 +1155,6 @@ footer::before {
     user-select: text;
     height: 100%;
     max-height: 400px;
-}
-
-.line-numbers {
-    padding: 1rem 0.5rem;
-    background-color: var(--primary-light);
-    border-right: 1px solid var(--border-color);
-    color: var(--primary-color);
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.9rem;
-    text-align: right;
-    user-select: none;
-    min-width: 2.5rem;
-    overflow-y: hidden;
-}
-
-.line-numbers div {
-    height: 1.6em;
-}
-
-.line-numbers.hidden {
-    display: none;
 }
 
 /* Responsive styles */
